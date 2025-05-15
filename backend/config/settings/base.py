@@ -1,15 +1,19 @@
-import os
 from pathlib import Path
+from datetime import timedelta 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 INSTALLED_APPS = [
+    'corsheaders',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'rest_framework_simplejwt.token_blacklist',
     
     'backend.apps.users',
     'backend.apps.tasks',
@@ -21,6 +25,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    
+    'SIMPLE_JWT': {
+        'AUTH_HEADER_TYPES': ('Bearer',),
+        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+        'BLACKLIST_AFTER_ROTATION': True,
+        'UPDATE_LAST_LOGIN': True,
+    }
 }
 
 MIDDLEWARE = [
@@ -32,6 +44,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", 
 ]
 
 DATABASES = {
@@ -71,4 +87,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+ROOT_URLCONF = 'backend.urls'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+}
