@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=todo_db
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    volumes:
+      - ./backend:/app/backend
+      - ./manage.py:/app/manage.py
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.config.settings.development
+
+#
+ # frontend:
+  #  build: ./frontend
+   # volumes:
+    #  - ./frontend:/app
+     # - /app/node_modules
+    #ports:
+     # - "3000:3000"
+    #depends_on:
+    #  - backend
+volumes:
+ postgres_data:
+# static_volume:
+#  media_volume:

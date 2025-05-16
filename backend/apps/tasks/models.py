@@ -1,7 +1,11 @@
+from pathlib import Path
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+UPLOAD_PATH = BASE_DIR / 'uploads' / 'tasks'
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -100,3 +104,11 @@ class Task(models.Model):
     def set_reminder(self, reminder_date):
         self.reminder = reminder_date
         self.save()
+
+    # Agregar campo para archivos adjuntos
+    attachment = models.FileField(
+        upload_to=str(UPLOAD_PATH),
+        null=True,
+        blank=True,
+        verbose_name=_('archivo adjunto')
+    )
