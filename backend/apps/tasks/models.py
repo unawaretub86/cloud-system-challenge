@@ -66,6 +66,22 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+    def clean(self):
+        if self.status:
+            self.status = self.status.lower()
+            valid_status = [choice[0] for choice in self.STATUS_CHOICES]
+            if self.status not in valid_status:
+                raise ValueError(f"Estado '{self.status}' no es válido.")
+        if self.priority:
+            self.priority = self.priority.lower()
+            valid_priority = [choice[0] for choice in self.PRIORITY_CHOICES]
+            if self.priority not in valid_priority:
+                raise ValueError(f"Prioridad '{self.priority}' no es válida.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean() 
+        super().save(*args, **kwargs)
+
     def mark_as_completed(self):
         self.completed = True
         self.status = 'completed'
