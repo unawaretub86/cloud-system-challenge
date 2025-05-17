@@ -1,0 +1,62 @@
+services:
+  # Frontend React application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    networks:
+      - app-network
+
+  # Backend Django application
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/docker/Dockerfile
+    ports:
+      - "${BACKEND_PORT}:8000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./manage.py:/app/manage.py
+    env_file:
+      - ./.env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=src.config.settings
+      - CORS_ALLOWED_ORIGINS=http://localhost:${FRONTEND_PORT},http://frontend:80,http://localhost:${BACKEND_PORT}
+      - CORS_ALLOW_CREDENTIALS=True
+      - DB_HOST=db
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Database service
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
