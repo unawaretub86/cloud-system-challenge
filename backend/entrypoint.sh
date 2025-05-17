@@ -22,11 +22,9 @@ while True:
 "
 echo "Base de datos disponible!"
 
-# Aplicar migraciones
 echo "Aplicando migraciones..."
 python manage.py migrate
 
-# Crear superusuario si no existe
 echo "Verificando superusuario..."
 python -c "
 import django
@@ -40,10 +38,8 @@ else:
     print('Superusuario ya existe')
 "
 
-# Recolectar archivos estáticos
 echo "Recolectando archivos estáticos..."
 python manage.py collectstatic --noinput
 
-# Iniciar servidor
 echo "Iniciando servidor..."
 gunicorn backend.config.wsgi:application --bind 0.0.0.0:8000

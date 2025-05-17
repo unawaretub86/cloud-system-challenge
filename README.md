@@ -2,6 +2,8 @@
 
 A full-stack task management application built with React.js (frontend) and Django (backend).
 
+builded with docker and docker compose, clean architecture, git flow
+
 ## Features
 
 - User authentication (register, login, logout)
@@ -207,6 +209,10 @@ We've included a Makefile with the following commands for easier management:
 - `GET /api/tasks/<id>/` - Retrieve a specific task
 - `PUT /api/tasks/<id>/` - Update a task
 - `DELETE /api/tasks/<id>/` - Delete a task
+
+### Postman collection
+
+https://interstellar-satellite-385653.postman.co/workspace/Personal-Workspace~2dd40eb7-077f-4cca-8800-0674bea619b7/collection/17727110-f0dde517-a84d-4496-b874-0b6a89de7676?action=share&creator=17727110
 
 ## Project Structure
 
