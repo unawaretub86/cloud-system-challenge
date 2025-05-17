@@ -110,22 +110,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'src.config.wsgi.application'
 
 # Database
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT')
+import dj_database_url
 
+# Default database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': DB_NAME,
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': DB_HOST,
-        'PORT': DB_PORT,
+        'NAME': os.getenv('DB_NAME', 'todo_db'),
+        'USER': os.getenv('DB_USER', 'root'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'qwerty'),
+        'HOST': os.getenv('DB_HOST', 'db'), 
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
+
+# Override with DATABASE_URL if it exists
+if os.getenv('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(default=os.getenv('DATABASE_URL'), conn_max_age=600)
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
